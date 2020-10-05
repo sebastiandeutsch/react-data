@@ -1,3 +1,4 @@
+import ReactDataRegistry from '../ReactDataRegistry';
 import BaseModel, { dataTypeSymbol } from './BaseModel';
 
 export interface ModelProp<TValue, THasDefault> {
@@ -15,8 +16,8 @@ export interface ModelProps {
   [k: string]: ModelProp<any, any>
 }
 
-export function prop<TValue>(defaultFn: () => TValue): ModelProp<TValue, string>
-export function prop<TValue>(defaultValue: TValue): ModelProp<TValue, string>
+export function prop<TValue>(defaultFn?: () => TValue): ModelProp<TValue, string>
+export function prop<TValue>(defaultValue?: TValue): ModelProp<TValue, string>
 export function prop<TValue>(def?: any): ModelProp<TValue, any> {
   const isDefFn = typeof def === "function"
   return {
@@ -33,19 +34,24 @@ export interface InferredModelType<TProps extends ModelProps> {
 
 export function Model<TProps extends ModelProps>(modelProps: TProps): InferredModelType<TProps> {
   return class extends BaseModel {
-    constructor() {
-      super();
+    constructor(params:object) {
+      super(params, modelProps);
 
       const self = this;
       const keys = Object.keys(modelProps);
-      keys.forEach(function(key:string){
-        self[dataTypeSymbol].set(key, modelProps[key].defaultValue);
 
+      keys.forEach(function(key:string){
+        if (modelProps[key].defaultValue) {
+          self[dataTypeSymbol].set(key, JSON.parse(JSON.stringify(modelProps[key].defaultValue)));
+        }
+        // @TODO: Can this be done without self hack
         Object.defineProperty(self, key, {
           get: function() {
             return self[dataTypeSymbol].get(key);
           },
           set: function(newValue:any) {
+            ReactDataRegistry.addReaction("add Reaction: " + key + "=" + newValue);
+            ReactDataRegistry.notify();
             self[dataTypeSymbol].set(key, newValue);
           }
         });
