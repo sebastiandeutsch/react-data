@@ -4,11 +4,9 @@ class ReactDataRegistry {
   callbacks:any[] = [];
 
   constructor() {
-    console.log("Hi ReactDataRegistry");
   }
 
   addReaction(r:any) {
-    console.log(r);
     this.reactions.push(r);
   }
 
@@ -21,7 +19,6 @@ class ReactDataRegistry {
   }
 
   notify() {
-    console.log("notifiing", this.callbacks);
     this.callbacks.forEach((callback) => {
       callback();
     })

@@ -13,10 +13,7 @@ function observer(FunctionComponent:any):any {
     ReactDataRegistry.subscribe(() => {
       setValue(_ => (value + 1));
     });
-    return (<>
-        {value}
-        {FunctionComponent({...props})}
-      </>);
+    return FunctionComponent(props);
   };
 }
 
@@ -26,14 +23,12 @@ const App: FC<AppProps> = observer((props:any) => {
   console.log(props);
   const store = props.store;
 
-  console.log("render App", props);
-
   return (<div>
     <ul>
       {store.todoLists.map( (list:any, index:any) => {
         return (
           <li key={index}>
-            <h2>{list.name}</h2>
+            <h2>{list.name} {list.priority}</h2>
             <ul>
               {list.todos.map( (todoItem:any, index:any) => {
                 return (

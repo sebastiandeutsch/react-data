@@ -1,5 +1,4 @@
 import { Model, prop } from './Model';
-
 import TodoList from './TodoList';
 
 export default class TodoItem extends Model({

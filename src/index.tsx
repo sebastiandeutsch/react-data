@@ -9,8 +9,8 @@ import TodoItem from './models/TodoItem';
 import TodoList from './models/TodoList';
 
 const personal = new TodoList();
-personal.name = "Personal";
-personal.meaningOfLife = 303;
+personal.name = "My List";
+personal.priority = 1;
 
 const todoPersonal = new TodoItem();
 todoPersonal.name = "tax";
@@ -30,18 +30,21 @@ todo1.name = "Learn TS";
 todo1.todoList = work;
 
 work.todos.push(todo1);
-console.log(todo1);
-console.log(todo1.supername);
 
-const todo2 = new TodoItem();
-todo2.name = "Remove nasty bug";
-todo2.todoList = work;
+setTimeout(function() {
+  const todo2 = new TodoItem();
+  todo2.name = "Remove nasty bug";
+  todo2.todoList = work;
 
-work.todos.push(todo2);
+  work.todos = [...work.todos, todo2];
+}, 5000);
 
-console.log(personal);
-console.log("personal.name:", personal.name);
-console.log("personal.meaningOfLife:", personal.meaningOfLife);
+setTimeout(function() {
+  personal.update({
+    name: "Personal",
+    priority: 10
+  });
+}, 6000);
 
 const store = {
   todoLists: [

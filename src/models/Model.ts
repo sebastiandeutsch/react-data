@@ -9,8 +9,12 @@ export interface ModelProp<TValue, THasDefault> {
 }
 
 export type ModelPropsToData<MP extends ModelProps> = {
-  [k in keyof MP]: MP[k]["$valueType"]
+  [k in keyof MP]: MP[k]["$valueType"];
 }
+
+export type PublicInterface = {
+  update(attributes: Record<string, any>):void;
+};
 
 export interface ModelProps {
   [k: string]: ModelProp<any, any>
@@ -29,7 +33,7 @@ export function prop<TValue>(def?: any): ModelProp<TValue, any> {
 }
 
 export interface InferredModelType<TProps extends ModelProps> {
-  new (): ModelPropsToData<TProps>;
+  new (): ModelPropsToData<TProps> & PublicInterface;
 }
 
 export function Model<TProps extends ModelProps>(modelProps: TProps): InferredModelType<TProps> {
@@ -50,9 +54,9 @@ export function Model<TProps extends ModelProps>(modelProps: TProps): InferredMo
             return self[dataTypeSymbol].get(key);
           },
           set: function(newValue:any) {
+            self[dataTypeSymbol].set(key, newValue);
             ReactDataRegistry.addReaction("add Reaction: " + key + "=" + newValue);
             ReactDataRegistry.notify();
-            self[dataTypeSymbol].set(key, newValue);
           }
         });
       });

@@ -3,7 +3,7 @@ import TodoItem from './TodoItem';
 
 export default class TodoList extends Model({
   name: prop<string>("hans"),
-  meaningOfLife: prop<number>(42),
+  priority: prop<number>(1),
   todos: prop<TodoItem[]>([])
 }) {
   test() {
