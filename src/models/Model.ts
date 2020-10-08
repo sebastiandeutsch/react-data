@@ -33,12 +33,12 @@ export function prop<TValue>(def?: any): ModelProp<TValue, any> {
 }
 
 export interface InferredModelType<TProps extends ModelProps> {
-  new (): ModelPropsToData<TProps> & PublicInterface;
+  new (params?:Record<string, any>): ModelPropsToData<TProps> & PublicInterface;
 }
 
 export function Model<TProps extends ModelProps>(modelProps: TProps): InferredModelType<TProps> {
   return class extends BaseModel {
-    constructor(params:object) {
+    constructor(params:Record<string, any>) {
       super(params, modelProps);
 
       const self = this;
@@ -48,6 +48,11 @@ export function Model<TProps extends ModelProps>(modelProps: TProps): InferredMo
         if (modelProps[key].defaultValue) {
           self[dataTypeSymbol].set(key, JSON.parse(JSON.stringify(modelProps[key].defaultValue)));
         }
+
+        if (params && params[key]) {
+          self[dataTypeSymbol].set(key, params[key]);
+        }
+
         // @TODO: Can this be done without self hack
         Object.defineProperty(self, key, {
           get: function() {

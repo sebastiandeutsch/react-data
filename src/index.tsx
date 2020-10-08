@@ -19,8 +19,10 @@ todoPersonal.todoList = personal;
 personal.todos.push(todoPersonal);
 console.log("personal.todos:", personal.todos);
 
-const work = new TodoList();
-work.name = "Work";
+const work = new TodoList({
+  name: "Work",
+  priority: 2
+});
 
 console.log(work);
 console.log("work.todos:", work.todos);

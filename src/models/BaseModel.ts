@@ -6,7 +6,7 @@ export default class BaseModel {
   [dataTypeSymbol]: Map<string, any>;
   modelProps: object;
 
-  constructor(_params: object, modelProps:object) {
+  constructor(_params: Record<string, any> | undefined, modelProps:object) {
     this.modelProps = modelProps;
     this[dataTypeSymbol] = new Map();
   }
