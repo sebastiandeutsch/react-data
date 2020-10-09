@@ -1,11 +1,12 @@
-import ReactDataRegistry from '../ReactDataRegistry';
 import BaseModel, { dataTypeSymbol } from './BaseModel';
+import ReactDataRegistry from './ReactDataRegistry';
 
 export interface ModelProp<TValue, THasDefault> {
   $valueType: TValue
   $hasDefault: THasDefault
   defaultFn?: () => TValue
   defaultValue?: TValue
+  $options: any
 }
 
 export type ModelPropsToData<MP extends ModelProps> = {
@@ -14,21 +15,23 @@ export type ModelPropsToData<MP extends ModelProps> = {
 
 export type PublicInterface = {
   update(attributes: Record<string, any>):void;
+  save():void;
 };
 
 export interface ModelProps {
   [k: string]: ModelProp<any, any>
 }
 
-export function prop<TValue>(defaultFn?: () => TValue): ModelProp<TValue, string>
-export function prop<TValue>(defaultValue?: TValue): ModelProp<TValue, string>
-export function prop<TValue>(def?: any): ModelProp<TValue, any> {
+export function prop<TValue>(defaultFn?: () => TValue, options?: any): ModelProp<TValue, string>
+export function prop<TValue>(defaultValue?: TValue, options?: any): ModelProp<TValue, string>
+export function prop<TValue>(def?: any, options?: any): ModelProp<TValue, any> {
   const isDefFn = typeof def === "function"
   return {
     $valueType: null as any,
     $hasDefault: null as any,
     defaultFn: isDefFn ? def : undefined,
-    defaultValue: isDefFn ? undefined : def
+    defaultValue: isDefFn ? undefined : def,
+    $options: options
   }
 }
 

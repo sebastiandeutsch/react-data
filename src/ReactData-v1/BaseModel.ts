@@ -1,4 +1,4 @@
-import ReactDataRegistry from '../ReactDataRegistry';
+import ReactDataRegistry from './ReactDataRegistry';
 
 export const dataTypeSymbol: unique symbol = Symbol('dataTypeSymbol')
 
@@ -22,5 +22,12 @@ export default class BaseModel {
         ReactDataRegistry.notify();
       }
     });
+  }
+
+  save() {
+    if(!this[dataTypeSymbol].get('id')) {
+      throw('Mode will need an id to be saved in store');
+    }
+    ReactDataRegistry.addToStore(this.constructor.name, this);
   }
 }

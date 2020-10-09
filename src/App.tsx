@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
-import ReactDataRegistry from './ReactDataRegistry';
+import ReactDataRegistry from './ReactData-v1/ReactDataRegistry';
+import { useForceUpdate } from './ReactData-v1/utils';
 
 interface AppProps {
   store: any
@@ -8,24 +9,26 @@ interface AppProps {
 
 function observer(FunctionComponent:any):any {
   return (props:any) => {
-    const [value, setValue] = React.useState(0);
+    const forceUpdate = useForceUpdate()
+
     ReactDataRegistry.addToStack(FunctionComponent);
     ReactDataRegistry.subscribe(() => {
-      setValue(_ => (value + 1));
+      forceUpdate();
     });
+
     return FunctionComponent(props);
   };
 }
 
-// temp1.todoLists[0].name = "foo";
-
 const App: FC<AppProps> = observer((props:any) => {
   console.log(props);
   const store = props.store;
+  const todoLists = store.TodoList.findAll();
+  console.log(todoLists);
 
   return (<div>
     <ul>
-      {store.todoLists.map( (list:any, index:any) => {
+      {todoLists.map( (list:any, index:any) => {
         return (
           <li key={index}>
             <h2>{list.name} {list.priority}</h2>
